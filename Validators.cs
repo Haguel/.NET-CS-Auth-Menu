@@ -9,51 +9,51 @@ namespace exam
 {
     internal class Validators
     {
-        private void makeError(string error)
+        private void MakeError(string error)
         {
             Console.WriteLine(new Exception($"Validation has been failed: {error}"));
 
             Environment.Exit(0);
         }
 
-        public bool minLength(string value, int length, string error = null)
+        public bool MinLength(string value, int length, string error = null)
         {
             if (error == null) return value.Length >= length;
 
-            if (value.Length < length) makeError(error);
+            if (value.Length < length) MakeError(error);
 
             return true;
         }
 
-        public bool maxLength(string value, int length, string error = null)
+        public bool MaxLength(string value, int length, string error = null)
         {
             if (error == null) return value.Length <= length;
 
-            if (value.Length > length) makeError(error);
+            if (value.Length > length) MakeError(error);
 
             return true;
         }
 
-        public bool isEmail(string value, string error = null) 
+        public bool IsEmail(string value, string error = null) 
         {
             Regex regex = new Regex(@"[A-z._]{5,}\@[A-z]{2,}\.[A-z]{2,10}");
             Match match = regex.Match(value);
 
             if (error == null) return match.Success;
 
-            if (!match.Success) makeError(error);
+            if (!match.Success) MakeError(error);
 
             return true;
         }
 
-        public bool isStrongPassword(string value, string error = null)
+        public bool IsStrongPassword(string value, string error = null)
         {
             Regex regex = new Regex(@"(?=.*[0-9])(?=.*[a-z]).{8,}");
             Match match = regex.Match(value);
 
             if (error == null) return match.Success;
 
-            if (!match.Success) makeError(error);
+            if (!match.Success) MakeError(error);
 
             return true;
         }
