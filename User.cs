@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,17 +18,17 @@ namespace App
 
     internal class CompletedUser
     {
-        public string login { get; }
-        public string email { get; }
-        public string passwordHash { get; }
-        public string imageSrc { get; }
+        public string login { get; set; }
+        public string email { get; set; }
+        public string passwordHash { get; set; }
+        public string imageSrc { get; set; }
 
         public CompletedUser(string login, string email, string passwordHash, string imageSrc)
         {
-            login = login;
-            email = email;
-            passwordHash = passwordHash;
-            imageSrc = imageSrc;
+            this.login = login;
+            this.email = email;
+            this.passwordHash = passwordHash;
+            this.imageSrc = imageSrc;
         }
 
         public CompletedUser()
@@ -36,6 +38,17 @@ namespace App
             passwordHash = "";
             imageSrc = "";
         }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as CompletedUser);
+        }
+
+        public bool Equals(CompletedUser obj)
+        {
+            return obj != null && obj.email == this.email && obj.login == this.login && obj.imageSrc == this.imageSrc && obj.passwordHash == this.passwordHash;
+        }
+
     }
 
     internal class UserModel

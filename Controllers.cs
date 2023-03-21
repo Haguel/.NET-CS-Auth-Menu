@@ -19,10 +19,21 @@ namespace App
             const int minLoginLenght = 3;
             const int maxLoginLenght = 30;
 
-            validators.MinLength(user.login, minLoginLenght, $"Login lenght must be at least {minLoginLenght} symbols.");
-            validators.MaxLength(user.login, maxLoginLenght, $"Login lenght mustn't be bigger than {maxLoginLenght} symbols.");
-            validators.IsEmail(user.email, "Email is invalid.");
-            validators.IsStrongPassword(user.password, "Password isn't strong enough. It must contain digits and letter. Lenght must be at least 8 symbols.");
+            if (user.login != null)
+            {
+                validators.MinLength(user.login, minLoginLenght, $"Login lenght must be at least {minLoginLenght} symbols.");
+                validators.MaxLength(user.login, maxLoginLenght, $"Login lenght mustn't be bigger than {maxLoginLenght} symbols.");
+            }
+
+            if (user.email != null)
+            {
+                validators.IsEmail(user.email, "Email is invalid.");
+            }
+
+            if (user.password != null)
+            {
+                validators.IsStrongPassword(user.password, "Password isn't strong enough. It must contain digits and letter. Lenght must be at least 8 symbols.");
+            }
         }
 
         private string makePasswordHash(string password)
@@ -38,7 +49,7 @@ namespace App
             database = new Database();
         }
 
-        public void Register(BaseUser user)
+        public CompletedUser Register(BaseUser user)
         {
             ValidateData(user);
 
@@ -49,34 +60,43 @@ namespace App
             UserModel userModel = new UserModel(userCompleted);
 
             userModel.Save();
+
+            return userCompleted;
         }
 
-        public void Login(BaseUser user) 
+        public CompletedUser Login(BaseUser user) 
         {
             ValidateData(user);
 
             CompletedUser existedUser = database.FindOne(user.email);
 
-            if (!bcrypt.Verify(user.password, existedUser.passwordHash)) throw new Exception("Wrong password.");
+            if(existedUser == null) throw new Exception("Wrong email or password.");
+
+            if (!bcrypt.Verify(user.password, existedUser.passwordHash)) throw new Exception("Wrong email or password.");
+
+            return existedUser;
         }
 
-        public void changePassword(BaseUser user, string oldPassword, string newPassword)
+        public CompletedUser ChangePassword(CompletedUser existedUser, string oldPassword, string newPassword)
         { 
-            CompletedUser existedUser = database.FindOne(user.email);
-
             if (!bcrypt.Verify(oldPassword, existedUser.passwordHash)) throw new Exception("Wrong password.");
+
+            BaseUser userWithNewPassword = new BaseUser();
+            userWithNewPassword.password = newPassword;
+
+            ValidateData(userWithNewPassword);
 
             string passwordHash = makePasswordHash(newPassword);
 
-            CompletedUser updatedUser = new CompletedUser(user.login, user.email, passwordHash, user.imageSrc);
+            CompletedUser updatedUser = new CompletedUser(existedUser.login, existedUser.email, passwordHash, existedUser.imageSrc);
 
             database.UpdateOne(existedUser, updatedUser);
+
+            return updatedUser;
         }
 
-        public void delete(BaseUser user)
+        public void Delete(CompletedUser existedUser)
         {
-            CompletedUser existedUser = database.FindOne(user.email);
-
             database.DeleteOne(existedUser);
         }
     }

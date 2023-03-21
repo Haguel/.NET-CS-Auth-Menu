@@ -61,9 +61,18 @@ namespace App
                     throw new Exception("UserModel, updateOne() error: User wasn't found.");
                 }
 
-                new UserModel(updatedUser).Save();
-
                 DeleteOne(existedUser);
+
+                try 
+                {
+                    new UserModel(updatedUser).Save();
+                }
+                catch (Exception err) 
+                {
+                    new UserModel(existedUser).Save();
+
+                    throw new Exception(err.Message);
+                }
             }
             catch (Exception err)
             {
@@ -86,6 +95,8 @@ namespace App
                 List<CompletedUser> existedUsers = LoadUsers();
 
                 existedUsers.Remove(existedUser);
+
+                SaveUsers(existedUsers);
             }
             catch (Exception err)
             {
