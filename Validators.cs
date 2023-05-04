@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 
 namespace exam
@@ -11,9 +7,7 @@ namespace exam
     {
         private void MakeError(string error)
         {
-            Console.WriteLine(new Exception($"Validation has been failed: {error}"));
-
-            Environment.Exit(0);
+            throw new Exception($"Validation has been failed: {error}");
         }
 
         public bool MinLength(string value, int length, string error = null)

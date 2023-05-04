@@ -1,10 +1,5 @@
 ﻿using exam;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace App
 {
@@ -14,8 +9,19 @@ namespace App
         private Validators validators;
         private Database database;
 
-        private void ValidateData(BaseUser user)
+        private void CheckDataExists(BaseUser user)
         {
+            UserSettings userSettings = new UserSettings();
+
+            if (user.login == null && userSettings.login.isRequired) { throw new Exception("Login is required. Please try again."); }
+            if (user.email == null && userSettings.email.isRequired) { throw new Exception("Email is required. Please try again."); }
+            if (user.password == null && userSettings.passwordHash.isRequired) { throw new Exception("Password is required. Please try again."); }
+            if (user.imageSrc == null && userSettings.imageSrc.isRequired) { throw new Exception("Image source is required. Please try again."); }
+        }
+
+        private void CheckDataCorrect(BaseUser user)
+        {
+
             const int minLoginLenght = 3;
             const int maxLoginLenght = 30;
 
@@ -51,7 +57,8 @@ namespace App
 
         public CompletedUser Register(BaseUser user)
         {
-            ValidateData(user);
+            CheckDataExists(user);
+            CheckDataCorrect(user);
 
             string passwordHash = makePasswordHash(user.password);
 
@@ -66,8 +73,6 @@ namespace App
 
         public CompletedUser Login(BaseUser user) 
         {
-            ValidateData(user);
-
             CompletedUser existedUser = database.FindOne(user.email);
 
             if(existedUser == null) throw new Exception("Wrong email or password.");
@@ -84,7 +89,7 @@ namespace App
             BaseUser userWithNewPassword = new BaseUser();
             userWithNewPassword.password = newPassword;
 
-            ValidateData(userWithNewPassword);
+            CheckDataCorrect(userWithNewPassword);
 
             string passwordHash = makePasswordHash(newPassword);
 

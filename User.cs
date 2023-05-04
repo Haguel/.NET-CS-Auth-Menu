@@ -8,6 +8,13 @@ using System.Threading.Tasks;
 
 namespace App
 {
+    internal class UserSettings
+    {
+        public readonly (bool isUnique, bool isRequired) login = (false, true);
+        public readonly (bool isUnique, bool isRequired) email = (true, true);
+        public readonly (bool isUnique, bool isRequired) passwordHash = (false, true);
+        public readonly (bool isUnique, bool isRequired) imageSrc = (false, false);
+    }
     internal class BaseUser
     {
         public string login;
@@ -97,10 +104,12 @@ namespace App
 
         public UserModel(CompletedUser userCompleted)
         {
-            this.login = (userCompleted.login, false, true);
-            this.email = (userCompleted.email, true, true);
-            this.passwordHash = (userCompleted.passwordHash, false, true);
-            this.imageSrc = (userCompleted.imageSrc, false, false);
+            UserSettings userSettigns = new UserSettings();
+
+            login = (userCompleted.login, userSettigns.login.isUnique, userSettigns.login.isRequired);
+            email = (userCompleted.email, userSettigns.email.isUnique, userSettigns.email.isUnique);
+            passwordHash = (userCompleted.passwordHash, userSettigns.passwordHash.isUnique, userSettigns.passwordHash.isUnique);
+            imageSrc = (userCompleted.imageSrc, userSettigns.imageSrc.isUnique, userSettigns.imageSrc.isUnique);
 
             database = new Database();
         }

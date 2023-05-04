@@ -1,9 +1,5 @@
-﻿using exam;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace App
 {
@@ -137,15 +133,16 @@ namespace App
                 WriteColorText("Password*: ", ConsoleColor.Cyan);
                 user.password = ValidateInput(ReadLineOrEsc());
 
-                WriteColorText("Image source*: ", ConsoleColor.Cyan);
+                WriteColorText("Image source: ", ConsoleColor.Cyan);
                 user.imageSrc = ValidateInput(ReadLineOrEsc());
+
+                currentUser = controllers.Register(user);
             }
-            catch
+            catch (Exception error)
             {
-                Output();
+                OutputFinishScreen(error.Message);
             }
             
-            currentUser = controllers.Register(user);
 
             Console.Clear();
 
@@ -171,19 +168,12 @@ namespace App
 
                 WriteColorText("Password*: ", ConsoleColor.Cyan);
                 user.password = ValidateInput(ReadLineOrEsc());
-            }
-            catch
-            {
-                Output();
-            }
 
-            try
-            {
                 currentUser = controllers.Login(user);
             }
-            catch (Exception exception)
+            catch (Exception error)
             {
-                OutputFinishScreen(exception.Message);
+                OutputFinishScreen(error.Message);
             }
 
             OutputFinishScreen("You have been successfully loginned!");
@@ -218,7 +208,7 @@ namespace App
 
             currentUser = controllers.ChangePassword(currentUser, oldPassword, newPassword);
 
-            OutputFinishScreen("You have been successfully changed the password!");
+            OutputFinishScreen("You have successfully changed your password!");
         }
 
         private void Delete()
@@ -234,7 +224,7 @@ namespace App
 
             currentUser = null;
 
-            OutputFinishScreen("You have successfully deleted yout account!");
+            OutputFinishScreen("You have successfully deleted your account!");
         }
 
         public void Output()
