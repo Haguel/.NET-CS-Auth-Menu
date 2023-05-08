@@ -1,10 +1,5 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace App
 {
@@ -15,6 +10,7 @@ namespace App
         public readonly (bool isUnique, bool isRequired) passwordHash = (false, true);
         public readonly (bool isUnique, bool isRequired) imageSrc = (false, false);
     }
+
     internal class BaseUser
     {
         public string login;

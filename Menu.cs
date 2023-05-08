@@ -8,6 +8,7 @@ namespace App
         private CompletedUser currentUser = null;
         private Controllers controllers = new Controllers();
 
+
         List<ConsoleKey> availableKeys = new List<ConsoleKey>() { ConsoleKey.D1, ConsoleKey.D2, ConsoleKey.D3, ConsoleKey.D4, };
 
         private bool IsValidKey(ConsoleKey key)
@@ -32,7 +33,7 @@ namespace App
                 {
                     Console.WriteLine();
 
-                    throw new Exception();
+                    throw new EscapeException();
                 }
 
                 if (keyInfo.Key == ConsoleKey.Enter) 
@@ -140,7 +141,8 @@ namespace App
             }
             catch (Exception error)
             {
-                OutputFinishScreen(error.Message);
+                if (error is EscapeException) Output();
+                else OutputFinishScreen(error.Message);
             }
             
 
@@ -173,7 +175,8 @@ namespace App
             }
             catch (Exception error)
             {
-                OutputFinishScreen(error.Message);
+                if (error is EscapeException) Output();
+                else OutputFinishScreen(error.Message);
             }
 
             OutputFinishScreen("You have been successfully loginned!");
