@@ -144,16 +144,8 @@ namespace App
                 if (error is EscapeException) Output();
                 else OutputFinishScreen(error.Message);
             }
-            
 
-            Console.Clear();
-
-            OutputMenuHint("any button");
-            WriteLineColorText("Account has been successfuly registered!", ConsoleColor.Yellow);
-
-            breakWhenKeyPressed();
-
-            Output();
+            OutputFinishScreen("Account has been successfuly registered!");
         }
 
         private void Login()
@@ -193,23 +185,21 @@ namespace App
 
             OutputMenuHint();
 
-            string oldPassword = "";
-            string newPassword = "";
-
             try
             {
                 WriteColorText("Current password*: ", ConsoleColor.Cyan);
-                oldPassword = ValidateInput(Console.ReadLine());
+                string oldPassword = ValidateInput(Console.ReadLine());
 
                 WriteColorText("New password*: ", ConsoleColor.Cyan);
-                newPassword = ValidateInput(Console.ReadLine());
+                string newPassword = ValidateInput(Console.ReadLine());
+
+                currentUser = controllers.ChangePassword(currentUser, oldPassword, newPassword);
             }
-            catch
+            catch (Exception error)
             {
-                Output();
+                OutputFinishScreen(error.Message);
             }
 
-            currentUser = controllers.ChangePassword(currentUser, oldPassword, newPassword);
 
             OutputFinishScreen("You have successfully changed your password!");
         }
@@ -223,9 +213,16 @@ namespace App
                 return;
             }
 
-            controllers.Delete(currentUser);
+            try
+            {       
+                controllers.Delete(currentUser);
 
-            currentUser = null;
+                currentUser = null;
+            }
+            catch (Exception error)
+            {
+                OutputFinishScreen(error.Message);
+            }
 
             OutputFinishScreen("You have successfully deleted your account!");
         }
