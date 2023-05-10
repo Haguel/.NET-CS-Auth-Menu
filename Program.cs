@@ -6,6 +6,8 @@ namespace exam
     {
         static void Main(string[] args)
         {
+            System.Console.Title = "Authentication";
+
             Menu menu = new Menu();
             menu.Output();
         }

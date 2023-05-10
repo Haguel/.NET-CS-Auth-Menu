@@ -42,7 +42,7 @@ namespace App
             }
         }
 
-        private string makePasswordHash(string password)
+        private string MakePasswordHash(string password)
         {
             string salt = bcrypt.GenSalt(10);
             return bcrypt.Hash(password, salt);
@@ -60,7 +60,7 @@ namespace App
             CheckDataExists(user);
             CheckDataCorrect(user);
 
-            string passwordHash = makePasswordHash(user.password);
+            string passwordHash = MakePasswordHash(user.password);
 
             CompletedUser userCompleted = new CompletedUser(user.login, user.email, passwordHash, user.email);
 
@@ -91,7 +91,7 @@ namespace App
 
             CheckDataCorrect(userWithNewPassword);
 
-            string passwordHash = makePasswordHash(newPassword);
+            string passwordHash = MakePasswordHash(newPassword);
 
             CompletedUser updatedUser = new CompletedUser(existedUser.login, existedUser.email, passwordHash, existedUser.imageSrc);
 

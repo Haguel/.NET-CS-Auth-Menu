@@ -8,7 +8,6 @@ namespace App
         private CompletedUser currentUser = null;
         private Controllers controllers = new Controllers();
 
-
         List<ConsoleKey> availableKeys = new List<ConsoleKey>() { ConsoleKey.D1, ConsoleKey.D2, ConsoleKey.D3, ConsoleKey.D4, };
 
         private bool IsValidKey(ConsoleKey key)
@@ -31,8 +30,6 @@ namespace App
 
                 if (keyInfo.Key == ConsoleKey.Escape) 
                 {
-                    Console.WriteLine();
-
                     throw new EscapeException();
                 }
 
@@ -67,7 +64,7 @@ namespace App
             return value.Trim() == "" ? null : value;
         }
 
-        private void breakWhenKeyPressed()
+        private void BreakWhenKeyPressed()
         {
             while (true)
             {
@@ -87,7 +84,7 @@ namespace App
             OutputMenuHint("any button");
             WriteLineColorText(text, ConsoleColor.Yellow);
 
-            breakWhenKeyPressed();
+            BreakWhenKeyPressed();
 
             Output();
         }
